@@ -23,6 +23,20 @@ export const COLORS = {
   error: '#FF3B30',
   info: '#5AC8FA',
 
+  // 扩展多彩色板 - 用于知识图谱和复杂展示
+  extended: {
+    orange: '#FF9500',
+    yellow: '#FFCC00',
+    green: '#34C759',
+    teal: '#5AC8FA',
+    cyan: '#32ADE6',
+    blue: '#007AFF',
+    indigo: '#5856D6',
+    purple: '#AF52DE',
+    pink: '#FF2D55',
+    red: '#FF3B30',
+  },
+
   // 渐变
   gradient: {
     primary: ['#007AFF', '#5856D6'],
