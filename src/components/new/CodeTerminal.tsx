@@ -45,21 +45,61 @@ const syntaxRules: Record<string, Array<{ pattern: RegExp; color: string }>> = {
   ],
 };
 
-// 应用语法高亮
-const applySyntaxHighlight = (line: string, language: string): string => {
-  const rules = syntaxRules[language] || syntaxRules.bash;
-  let highlighted = line;
+// Token 类型
+interface Token {
+  text: string;
+  color?: string;
+}
 
-  // 按顺序应用规则（注意避免重复替换）
+// 应用语法高亮 - 返回 token 数组而不是 HTML 字符串
+const tokenizeLine = (line: string, language: string): Token[] => {
+  const rules = syntaxRules[language] || syntaxRules.bash;
+  const tokens: Token[] = [];
+
+  // 找出所有匹配的位置
+  const matches: Array<{ start: number; end: number; text: string; color: string }> = [];
+
   rules.forEach(({ pattern, color }) => {
-    highlighted = highlighted.replace(pattern, (match) => {
-      // 如果已经被包裹了，就不再处理
-      if (match.startsWith('<span')) return match;
-      return `<span style="color: ${color}">${match}</span>`;
-    });
+    // 复制正则以便能重置
+    const globalPattern = new RegExp(pattern.source, 'g');
+    let match;
+    while ((match = globalPattern.exec(line)) !== null) {
+      matches.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        text: match[0],
+        color,
+      });
+    }
   });
 
-  return highlighted;
+  // 按起始位置排序
+  matches.sort((a, b) => a.start - b.start);
+
+  // 合并重叠的匹配（优先保留第一个）
+  const filteredMatches: typeof matches = [];
+  let currentEnd = -1;
+  for (const match of matches) {
+    if (match.start >= currentEnd) {
+      filteredMatches.push(match);
+      currentEnd = match.end;
+    }
+  }
+
+  // 构建 token 数组
+  let pos = 0;
+  for (const match of filteredMatches) {
+    if (match.start > pos) {
+      tokens.push({ text: line.slice(pos, match.start) });
+    }
+    tokens.push({ text: match.text, color: match.color });
+    pos = match.end;
+  }
+  if (pos < line.length) {
+    tokens.push({ text: line.slice(pos) });
+  }
+
+  return tokens.length > 0 ? tokens : [{ text: line }];
 };
 
 export const CodeTerminal: React.FC<CodeTerminalProps> = ({
@@ -196,9 +236,11 @@ export const CodeTerminal: React.FC<CodeTerminalProps> = ({
               8
             );
 
-            // 应用语法高亮
-            const highlightedLine =
-              visibleChars > 0 ? applySyntaxHighlight(visibleLine, language) : '';
+            // 只有当整行都显示完整时才应用语法高亮
+            const isLineComplete = visibleChars >= line.length;
+            const tokens = isLineComplete
+              ? tokenizeLine(line, language)
+              : null;
 
             return (
               <div
@@ -224,8 +266,21 @@ export const CodeTerminal: React.FC<CodeTerminalProps> = ({
                   </span>
                 )}
 
-                {/* 代码行 */}
-                <span dangerouslySetInnerHTML={{ __html: highlightedLine || '&nbsp;' }} />
+                {/* 代码行 - 打字过程中显示纯文本，完成后显示高亮 */}
+                {isLineComplete && tokens ? (
+                  <span>
+                    {tokens.map((token, tokenIndex) => (
+                      <span
+                        key={tokenIndex}
+                        style={token.color ? { color: token.color } : undefined}
+                      >
+                        {token.text}
+                      </span>
+                    ))}
+                  </span>
+                ) : (
+                  <span>{visibleLine || '\u00A0'}</span>
+                )}
 
                 {/* 当前行光标 */}
                 {visibleChars < line.length &&

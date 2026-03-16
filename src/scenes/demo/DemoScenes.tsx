@@ -30,9 +30,9 @@ const DemoHeroTitle: React.FC = () => {
 const DemoSectionTitle: React.FC = () => {
   return (
     <SectionTitle
-      sectionNumber={1}
-      title="为什么选择 Linux"
-      description="Linux 系统更适合运行 AI 助手，生态完善，稳定性强"
+      sectionNumber={2}
+      title="为什么选择 自定义组件库+自定义skills"
+      description="将通用的技巧，私有化标准化为自己的私有财富"
     />
   );
 };
@@ -41,15 +41,9 @@ const DemoSectionTitle: React.FC = () => {
 const DemoCodeTerminal: React.FC = () => {
   return (
     <CodeTerminal
-      code={`# 使用 nvm 安装 Node.js（推荐）
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-source ~/.bashrc
-nvm install 22
-nvm use 22
-
-# 验证安装
-node --version
-npm --version`}
+      code={`# 给编码工具安装remotion-best-practices 
+        npx skills add https://github.com/remotion-dev/skills --skill remotion-best-practices
+        `}
       language="bash"
       filename="install-node.sh"
       typingSpeed={1}
@@ -156,8 +150,8 @@ const DemoTransition: React.FC = () => {
         >
           <LightSweep duration={45} height={1080} />
           <HeroTitle
-            title="转场演示"
-            subtitle="淡入 + 缩放模糊 + 光晕效果"
+            title="remotion-bese-practices + 自定义规范"
+            subtitle="实现标准化 + 省时 + 产出"
           />
         </div>
       </ZoomBlurTransition>

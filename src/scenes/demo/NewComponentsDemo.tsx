@@ -116,10 +116,11 @@ const DemoTypewriter: React.FC = () => {
 // Demo 6: MultiLineTypewriter - 多行打字机
 const DemoMultiLineTypewriter: React.FC = () => {
   const lines = [
-    { text: "✅ GDPval 83% 是最亮眼的——这意味着它真的能干活了", color: COLORS.success },
-    { text: "✅ OSWorld 75% 是个惊喜——终于能自己操作电脑了", color: COLORS.success },
-    { text: "❌ SWE-Bench Pro +2.1% 有点尴尬...", color: COLORS.error, indent: true },
-    { text: "合着编程能力提升这么点？", color: COLORS.textSecondary, indent: true },
+    { text: "✅ remotion 是视频定义的基座", color: COLORS.success },
+    { text: "✅ remotion-best-practices 定义了remotion的最佳实践，让普通人能写通过自然语音写出视频", color: COLORS.success },
+    { text: "✅ 自定义组件库 + 制定规范 = 私有化 + 干掉重复工作", color: COLORS.success },
+    { text: "❌ 是否能代代替所有场景？...", color: COLORS.error, indent: true },
+    { text: "这点我们结尾在来探究？", color: COLORS.textSecondary, indent: true },
   ];
 
   return (
@@ -311,16 +312,16 @@ const DemoComparisonCards: React.FC = () => {
       items={[
         {
           label: '被选择',
-          description: '胶囊 被更多人正确使用',
+          description: 'remotion 被更多人正确使用',
           color: 'success',
         },
         {
           label: '被淘汰',
-          description: '胶囊 无法被正确使用',
+          description: '传统剪辑 正在被逐渐代替',
           color: 'error',
         },
       ]}
-      footer="贡献者获得相应收益"
+      footer="早期投入获得相应收益"
       showParticles={true}
     />
   );
